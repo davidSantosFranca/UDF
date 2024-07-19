@@ -1,0 +1,7 @@
+# Visual Studio Code
+.vscode/
+
+# C development
+*.o
+*.out
+*.exe
