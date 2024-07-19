@@ -1,4 +1,5 @@
 #include "udf.h"
+#include "functions.h"
 
 /**
  * Function to calculate the ionic strength.
@@ -11,7 +12,7 @@
  * @param size The size of the arrays molarConcentration and chargeNumber.
  * @return The calculated ionic strength.
  */
-static real calculate_ionic_strength(real molarConcentration[], real chargeNumber[], int size)
+real calculate_ionic_strength(real molarConcentration[], real chargeNumber[], int size)
 {
     real sum = 0.0;
     if (chargeNumber == NULL)
@@ -31,31 +32,12 @@ static real calculate_ionic_strength(real molarConcentration[], real chargeNumbe
     return sum * 0.5;
 }
 
-/**
- * Calculates the molar fraction of species in a cell.
- *
- * @param c The cell index.
- * @param t The thread pointer.
- * @param molar_fraction An array to store the calculated molar fractions.
- * @param molecular_weight_species An array of molecular weights for each species.
- * @param N The number of species.
- */
-void calculate_molar_fraction(cell_t c, Thread *t, real *molar_fraction, real *molecular_weight_species, int N)
+void calculate_molar_concentration(cell_t c, Thread *t, real *molar_concentration, real *molecular_weight_species, int N)
 {
-    int i;
-    real mass_fraction;
-    real molecular_weight_mixture = 0.0;
-
-    for (i = 0; i < N; i++)
+    real density = C_R(c, t);
+    for (int i = 0; i < N; i++)
     {
-        mass_fraction = C_YI(c, t, i);
-        molecular_weight_mixture += mass_fraction * molecular_weight_species[i];
-    }
-
-    for (i = 0; i < N; i++)
-    {
-        mass_fraction = C_YI(c, t, i);
-        molar_fraction[i] = (mass_fraction * molecular_weight_mixture) / molecular_weight_species[i];
+        molar_concentration[i] = C_YI(c, t, i) * density / molecular_weight_species[i];
     }
 }
 
@@ -67,9 +49,24 @@ void calculate_molar_fraction(cell_t c, Thread *t, real *molar_fraction, real *m
  * @param size The size of the arrays.
  * @return The calculated value of K2.
  */
-static real calculate_K2(real molarConcentration[], real chargeNumber[], int size)
+real calculate_K2(real molarConcentration[], real chargeNumber[], int size)
 {
-    real ionic_strength = calculate_ionic_strength(molarConcentration, chargeNumber, size);
+    real sum = 0.0;
+    if (chargeNumber == NULL)
+    {
+        for (int i = 0; i < size; i++)
+        {
+            sum += molarConcentration[i];
+        }
+    }
+    else
+    {
+        for (int i = 0; i < size; i++)
+        {
+            sum += molarConcentration[i] * chargeNumber[i] * chargeNumber[i];
+        }
+    }
+    real ionic_strength = sum * 0.5;
     if (ionic_strength < 0.166)
     {
         return pow(10, (9.28105 - 3.664 * sqrt(ionic_strength)));
