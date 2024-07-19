@@ -24,10 +24,19 @@ DEFINE_VR_RATE(vol_reac_rate, c, t, r, mw, yi, rate, rr_t)
     real mfH2O = yi[7];
     real mwH2O = mw[7];
 
+    real mcI = mfI / mwI;
+    real mcIO3 = mfIO3 / mwIO3;
+    real mcH = mfH / mwH;
+    real mcI3 = mfI3 / mwI3;
+    real mcH2BO3 = mfH2BO3 / mwH2BO3;
+    real mcH3BO3 = mfH3BO3 / mwH3BO3;
+    real mcI2 = mfI2 / mwI2;
+    real mcH2O = mfH2O / mwH2O;
+
     if (!strcmp(r->name, "reaction-1"))
     {
         /* Reaction 1 - k1*[H+]*[H2BO3-]*/
-        *rate = k1 * mfH / mwH * mfH2BO3 / mwH2BO3;
+        *rate = k1 * mcH * mcH2BO3;
     }
     else if (!strcmp(r->name, "reaction-2"))
     {
@@ -35,16 +44,13 @@ DEFINE_VR_RATE(vol_reac_rate, c, t, r, mw, yi, rate, rr_t)
         real molar_fraction[N];
         calculate_molar_fraction(c, t, molar_fraction, mw, N);
         real k2 = calculate_K2(molar_fraction, chargeNumber, N);
-        real mcH = mmfH / mwH;
-        real mcI2 = mmfI2 / mwI2;
-        real mcIO3 = mmfIO3 / mwIO3;
 
         *rate = k2 * pow(mcH, 2) * pow(mcI2, 2) * mcIO3;
     }
     else if (!strcmp(r->name, "reaction-3"))
     {
         /* Reaction 3 - k3f*[I3-] - k3b*[I2]*[I-] */
-        *rate = k3f * mfI3 / mwI3 - k3b * mfI2 / mwI2 * mfI / mwI;
+        *rate = k3f * mcI3 - k3b * mcI2 * mcI;
     }
     else
     {
