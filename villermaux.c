@@ -2,8 +2,6 @@
 #include "functions.c"
 #include "constants.c"
 
-real chargeNumber[] = {1, 1, 1, 1, 1, 0, 0, 0};
-
 DEFINE_VR_RATE(vol_reac_rate, c, t, r, mw, yi, rate, rr_t)
 {
     // Number of species
