@@ -28,7 +28,7 @@ static real calculate_ionic_strength(real molarConcentration[], real chargeNumbe
             sum += molarConcentration[i] * chargeNumber[i] * chargeNumber[i];
         }
     }
-    return sum * 0.05;
+    return sum * 0.5;
 }
 
 /**
@@ -72,10 +72,10 @@ static real calculate_K2(real molarConcentration[], real chargeNumber[], int siz
     real ionic_strength = calculate_ionic_strength(molarConcentration, chargeNumber, size);
     if (ionic_strength < 0.166)
     {
-        return 9.28105 - 3.664 * sqrt(ionic_strength);
+        return pow(10, (9.28105 - 3.664 * sqrt(ionic_strength)));
     }
     else
     {
-        return 8.383 - 1.5115 * sqrt(ionic_strength) + 0.23689 * ionic_strength;
+        return pow(10, (8.383 - 1.5115 * sqrt(ionic_strength) + 0.23689 * ionic_strength));
     }
 }
