@@ -1,6 +1,4 @@
 #include "udf.h"
-#include "constants.h"
-#include "functions.h"
 
 DEFINE_VR_RATE(vol_reac_rate, c, t, r, mw, yi, rate, rr_t)
 {
