@@ -34,7 +34,7 @@ DEFINE_VR_RATE(vol_reac_rate, c, t, r, mw, yi, rate, rr_t)
     if (!strcmp(r->name, "reaction-1"))
     {
         /* Reaction 1 - k1*[H+]*[H2BO3-]*/
-        *rate = k1 * mcH * mcH2BO3;
+        *rate = k1 * mcH * mcH2BO3 * 0;
     }
     else if (!strcmp(r->name, "reaction-2"))
     {
