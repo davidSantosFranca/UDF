@@ -1,9 +1,12 @@
 #include "udf.h"
+#include "constants.h"
+#include "functions.h"
+
+// Number of species
+int n_components = 8;
 
 DEFINE_VR_RATE(vol_reac_rate, c, t, r, mw, yi, rate, rr_t)
 {
-    // Number of species
-    int N = 8;
     // mixture species I, IO3, H, I3, H2BO3, H3BO3, I2, H2O
     real mfI = yi[0];
     real mwI = mw[0];
@@ -34,15 +37,13 @@ DEFINE_VR_RATE(vol_reac_rate, c, t, r, mw, yi, rate, rr_t)
     if (!strcmp(r->name, "reaction-1"))
     {
         /* Reaction 1 - k1*[H+]*[H2BO3-]*/
-        *rate = k1 * mcH * mcH2BO3 * 0;
+        *rate = k1 * mcH * mcH2BO3;
     }
     else if (!strcmp(r->name, "reaction-2"))
     {
         /* Reaction 2 - k2*[H+]²*[I-]²*[IO3-]*/
         real molar_concentration[N];
-        calculate_molar_concentration(c, t, molar_concentration, mw, N);
-        real k2 = calculate_K2(molar_concentration, chargeNumber, N);
-
+        calculate_molar_concentration(c, t, molar_concentration, mw, n_components);
         *rate = k2 * pow(mcH, 2) * pow(mcI, 2) * mcIO3;
     }
     else if (!strcmp(r->name, "reaction-3"))
