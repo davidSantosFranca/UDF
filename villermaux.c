@@ -42,20 +42,15 @@ DEFINE_VR_RATE(vol_reac_rate, c, t, r, mw, yi, rate, rr_t)
     else if (!strcmp(r->name, "reaction-2"))
     {
         /* Reaction 2 - k2*[H+]²*[I-]²*[IO3-]*/
-        real molar_concentration[N];
+        real molar_concentration[n_components];
         calculate_molar_concentration(c, t, molar_concentration, mw, n_components);
-        real k2 = calculate_K2(molar_concentration, chargeNumber, N);
+        real k2 = calculate_K2(molar_concentration, chargeNumber, n_components);
         *rate = k2 * pow(mcH, 2) * pow(mcI, 2) * mcIO3;
     }
     else if (!strcmp(r->name, "reaction-3"))
     {
         /* Reaction 3 - k3b*[I2]*[I-] */
-        *rate = k3f * mcI2 * mcI;
-    }
-    else if (!strcmp(r->name, "reaction-4"))
-    {
-        /* Reaction 4 - k3f*[I3-] */
-        *rate = k3b * mcI3;
+        *rate = k3f * mcI2 * mcI - k3b * mcI3;
     }
     else
     {

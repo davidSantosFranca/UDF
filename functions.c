@@ -63,7 +63,7 @@ real calculate_K2(real molarConcentration[], real chargeNumber[], int size)
     {
         for (int i = 0; i < size; i++)
         {
-            sum += molarConcentration[i] * chargeNumber[i] * chargeNumber[i];
+            sum += molarConcentration[i] * pow(chargeNumber[i], 2);
         }
     }
     real ionic_strength = sum * 0.5;
