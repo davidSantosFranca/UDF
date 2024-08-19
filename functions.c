@@ -34,7 +34,7 @@ real calculate_ionic_strength(real molarConcentration[], real chargeNumber[], in
 
 void calculate_molar_concentration(cell_t c, Thread *t, real *molar_concentration, real *molecular_weight_species, int N)
 {
-    real density = C_R(c, t);
+    real density = C_R(c, t) * 1E-3; // kg/m^3 => kg/L
     for (int i = 0; i < N; i++)
     {
         molar_concentration[i] = C_YI(c, t, i) * density / molecular_weight_species[i];
@@ -44,10 +44,10 @@ void calculate_molar_concentration(cell_t c, Thread *t, real *molar_concentratio
 /**
  * Calculates the value of K2 based on the given molar concentrations, charge numbers, and size.
  *
- * @param molarConcentration An array of molar concentrations.
+ * @param molarConcentration An array of molar concentrations[mol/L].
  * @param chargeNumber An array of charge numbers.
  * @param size The size of the arrays.
- * @return The calculated value of K2.
+ * @return The calculated value of K2[mol*L^-1*s^-1].
  */
 real calculate_K2(real molarConcentration[], real chargeNumber[], int size)
 {
@@ -63,7 +63,7 @@ real calculate_K2(real molarConcentration[], real chargeNumber[], int size)
     {
         for (int i = 0; i < size; i++)
         {
-            sum += molarConcentration[i] * chargeNumber[i] * chargeNumber[i];
+            sum += molarConcentration[i] * pow(chargeNumber[i], 2);
         }
     }
     real ionic_strength = sum * 0.5;
